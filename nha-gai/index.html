@@ -766,7 +766,7 @@ $('rCount').addEventListener('change',()=>{
 $('rOther').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D+/g,'').slice(0,2); });
 document.querySelectorAll('input[name=attend]').forEach(r=>r.addEventListener('change',syncCount));
 syncCount();
-let guestName='';   // tên khách đã tra được ở phần cover (guests.json hoặc ?to=)
+let guestName='';   // tên khách lấy từ ?to= ở phần cover
 $('rsvpForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const attend=document.querySelector('input[name=attend]:checked').value, cnt=$('rCount').value;
@@ -778,7 +778,7 @@ $('rsvpForm').addEventListener('submit',async e=>{
   btn.disabled=true; btn.textContent='Đang gửi...';
   try{
     const r=await fetch(CONFIG.rsvpApi,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({
-      name: guestName || new URLSearchParams(location.search).get('id') || 'Quý khách',
+      name: guestName || 'Quý khách',
       attending: attend==='yes',
       guests: attend==='yes' ? parseInt(cnt==='other'?$('rOther').value:cnt,10) : 0
     })});
@@ -804,14 +804,9 @@ document.addEventListener('securitypolicyviolation',e=>{
 
 /* ============ cover ============ */
 (function(){
-  // tên khách mời: ...?id=ban123 → tra trong guests.json (cùng thư mục); vẫn nhận ...?to=Tên như cũ
-  const q=new URLSearchParams(location.search), id=q.get('id'), to=q.get('to');
-  const setGuest=g=>{ if(g&&g.trim()) $('cvGuest').textContent=guestName=g.trim().slice(0,40); };
-  if(id){
-    // đường dẫn tính từ thư mục trang, đúng cả khi link là /nha-gai hay /nha-gai/ hay /nha-gai/index.html
-    fetch(location.pathname.replace(/\/(index\.html)?$/,'')+'/guests.json')
-      .then(r=>r.ok?r.json():{}).then(m=>setGuest(m[id]||to)).catch(()=>setGuest(to));
-  } else setGuest(to);
+  // tên khách mời: ...?to=Tên
+  const to=new URLSearchParams(location.search).get('to');
+  if(to&&to.trim()) $('cvGuest').textContent=guestName=to.trim().slice(0,40);
   const hs=document.querySelector('.cv-hearts');
   for(let i=0;i<18;i++){ const e=document.createElement('i');
     e.style.left=(Math.random()*100)+'%'; e.style.setProperty('--dx',(Math.random()*80-40)+'px');

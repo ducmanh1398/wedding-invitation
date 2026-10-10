@@ -6,9 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Vietnamese wedding invitation (thiệp mời cưới) for Hương Ly & Đức Mạnh, 14.11.2026, Capella Gallery Hall. Each family side is a folder served as a clean URL: `nha-gai/index.html` → `<domain>/nha-gai` (bride's side, "nhà gái"); a future `nha-trai/index.html` → `<domain>/nha-trai` (groom's side). Each page is one self-contained HTML file: inline CSS, inline JS, and every asset embedded as a base64 data URI. Only Google Fonts and the Google Maps iframe and links are external.
 
-Guest names: `?id=ban123` is looked up in `guests.json` in the same folder as the page (a flat `{ "id": "Tên khách" }` map), and the value is shown on the cover. The fetch path comes from `location.pathname`, so it works with or without a trailing slash and under a sub-path. `?to=Tên` still works as a fallback.
+Guest names: `?to=Tên` is shown on the cover and sent as the name with the RSVP.
 
-No build, package manager, lint, or tests. Preview needs an HTTP server (`npx serve .`), because `fetch` of `guests.json` fails on `file://`.
+No build, package manager, lint, or tests. Preview with `npx serve .` (or open the file directly).
 
 ## Working with the 1.4 MB file
 
